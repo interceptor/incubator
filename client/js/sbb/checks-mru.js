@@ -934,9 +934,9 @@ define(function (require) {
 					$.each(checkHistoryArrays, function(key, historyArray) {
 						valueDivClass = (historyArray[1].checkStatus == "OK") ? "check-history-ok" : "check-history-nok"; // for css formatting
 						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'>" + historyArray[0] + "</span>";
-						stringCheckHistory = stringCheckHistory + "-";
+						stringCheckHistory = stringCheckHistory + " - ";
 						stringCheckHistory = stringCheckHistory + "<span class='" + valueDivClass + "'>" + historyArray[1].checkStatus + "</span>";
-						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'> [" + historyArray[1].responseTime +  "]</span><br>";
+						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'>[" + historyArray[1].responseTime +  "]</span><br>";
 					});
 					addTooltipInfoToElement(tableCells[0], stringCheckHistory);
 				} else {
