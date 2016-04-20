@@ -19,6 +19,11 @@ define(function (require) {
 		var imgmagnifyingglass = require('image!client/images/open-iconic/svg/magnifying-glass.svg!rel');
 		var imgextlink = require('image!client/images/icons/ext_link.svg!rel');
 		var imgsplunk = require('image!client/images/icons/splunk.svg!rel');
+		
+		var checksUtil = {};
+		
+		checksUtil.dateFormat = "YYYY-MM-DD HH:mm:ss:SSS";
+		
 				
 		return function () {
 			safeLog("Loading module checks-mru...");
@@ -581,10 +586,10 @@ define(function (require) {
 			function lastUpdateTimer(rowId, dataId) {
 				var row = document.getElementById(createValidID(rowId));
 				var lastUpdateElement = $(row).find('#' + dataId);
-				var lastUpdate = getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS');
-				$(lastUpdateElement).html(getHumanTimePassedSince(lastUpdate));
+				var lastUpdate = getTimeStamp();
+				$(lastUpdateElement).html(getHumanTimePassedSince(lastUpdate, checksUtil.dateFormat));
 				var timeinterval = setInterval(function() {
-					$(lastUpdateElement).html(getHumanTimePassedSince(lastUpdate));
+					$(lastUpdateElement).html(getHumanTimePassedSince(lastUpdate, checksUtil.dateFormat));
 				},10000);
 			}
 			
@@ -596,7 +601,7 @@ define(function (require) {
 				var loadingRow = [["status status-error", errorMsg], ["url",  url], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""]];
 				safeLog("Adding Error-Status row with ID [" + createValidID(url) +" ] to Table: " + tableId + " at index [" + 0 + "]");
 				addTableRow(tableId, url, loadingRow, 0);
-				checkHistoryManager(tableId, url, errorMsg, getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS'));
+				checkHistoryManager(tableId, url, errorMsg, getTimeStamp());
 			}
 			
 			function addLoadingRowToTable(tableId, url, index) {
@@ -607,7 +612,7 @@ define(function (require) {
 				var loadingRow = [["checkTimer", timerDiv], ["url", "Querying : " + url + "..."], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""]];
 				safeLog("Adding Loading-Status row with ID [" + createValidID(url) +" ] to Table: " + tableId + " at index [" + index + "]");
 				addTableRow(tableId, url, loadingRow, index);
-				addTimer(timerId, getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS'));
+				addTimer(timerId, getTimeStamp());
 			}
 					
 			function addCheckResultToTable(checkHtml, tableId, checkURL, timeElapsed) {
@@ -623,7 +628,7 @@ define(function (require) {
 				checkResultMap.port = getPort(checkURL);
 				checkResultMap.node = getNode(checkURL);
 				checkResultMap.buildTimestamp = getBuildTimestampFromLegacy(tempHtmlDom);
-				checkResultMap.lastUpdateTime = getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS');
+				checkResultMap.lastUpdateTime = getTimeStamp();
 				var statusClass = checkResultMap.status == "OK" ? "status status-ok" : "status status-nok";
 				var checkResultRow = [[statusClass, checkResultMap.status + " [" + timeElapsed + "]"], ["applicationName", truncate(checkResultMap.applicationName, 35)], ["artefactName", checkResultMap.artefactName], ["artefactVersion", checkResultMap.artefactVersion], ["node", checkResultMap.node], ["port", checkResultMap.port], ["buildTimestamp", checkResultMap.buildTimestamp], ["checkLevelOneUrl", checkResultMap.checkLevelOneUrl], ["lastUpdateTime", checkResultMap.lastUpdateTime]];
 				safeLog("Adding Check-Status row to Table: " + tableId);
@@ -819,11 +824,10 @@ define(function (require) {
 			
 			function getOldestHistoryEntryByStatus(checkHistoryArrays, status) {
 				var oldestHistoryEntry = ["none", "none"];
-				var dateFormat = 'YYYY-MM-DD HH:mm:ss:SSS';
 				$.each(checkHistoryArrays, function(key, historyArray) {
 					if (historyArray[1] == status) {
-						if (moment(oldestHistoryEntry[0], dateFormat).isValid()) { // check if there is already an entry
-							if (moment(historyArray[0], dateFormat).isBefore(moment(oldestHistoryEntry[0], dateFormat))) { // if its older, set it as new oldest
+						if (moment(oldestHistoryEntry[0], checksUtil.dateFormat).isValid()) { // check if there is already an entry
+							if (moment(historyArray[0], checksUtil.dateFormat).isBefore(moment(oldestHistoryEntry[0], checksUtil.dateFormat))) { // if its older, set it as new oldest
 								oldestHistoryEntry = historyArray;
 							}
 						} else { // first entry found
@@ -858,11 +862,10 @@ define(function (require) {
 			
 			function sortCheckHistory(checkHistoryArrays) {
 				sortedCheckHistoryArrays = checkHistoryArrays.sort(function(arrayA, arrayB) {
-					var dateFormat = 'YYYY-MM-DD HH:mm:ss:SSS';
 					var retVal;
-					if (moment(arrayA[0], dateFormat).isAfter(moment(arrayB[0], dateFormat))) {
+					if (moment(arrayA[0], checksUtil.dateFormat).isAfter(moment(arrayB[0], checksUtil.dateFormat))) {
 						retVal = 1;
-					} else if (moment(arrayA[0], dateFormat).isBefore(moment(arrayB[0], dateFormat))) {
+					} else if (moment(arrayA[0], checksUtil.dateFormat).isBefore(moment(arrayB[0], checksUtil.dateFormat))) {
 						retVal = -1;
 					} else {
 						retVal = 0;
@@ -944,18 +947,18 @@ define(function (require) {
 					
 			function safeLog(string) {
 				window.console && console.log(string + "\n");
-				$('#debug-log').append(getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS') + " -> ");
+				$('#debug-log').append(getTimeStamp() + " -> ");
 				$('#debug-log').append(string);
 				$('#debug-log').append("<br>");
 			}
 			
 			// http://momentjs.com/
-			function getTimeStamp(format) {
+			function getTimeStamp(format = checksUtil.dateFormat) {
 				return moment().format(format);
 			}
 			
-			function getHumanTimePassedSince(timestamp) {
-				return moment(timestamp).fromNow();
+			function getHumanTimePassedSince(timestamp, format) {
+				return moment(timestamp, format).fromNow();
 			}
 		}
 });
