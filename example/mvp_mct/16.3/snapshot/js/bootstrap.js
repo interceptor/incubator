@@ -1,22 +1,22 @@
 requirejs.config({
-    //By default load any module IDs from js/lib
+    //By default load any module IDs from client/js/lib
     baseUrl: '/build-status',
 	waitSeconds : 20,
 	paths: {
-        jquery: [/*'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',*/ 'js/lib/jquery-2.1.4.min'],
-		underscore: 'js/lib/underscore-1.8.3',
-		favico: 'js/lib/favico-0.3.10.min',
-		jqueryui: 'js/lib/jquery-ui.min',
-		jqueryqtip: 'js/lib/jquery.qtip.min',
-		store: 'js/lib/store.min',
-		moment: 'js/lib/moment.min',
-		store: 'js/lib/store.min',
-		checks: 'js/sbb/checks-mru',
-		checkworker: 'js/sbb/fetchCheckWorkerNode',
-		image: 'js/lib/require-image',
-		cssloader: 'js/sbb/cssloader',
-		favloader: 'js/sbb/favloader',
-		check: 'js/sbb/check',
+        jquery: [/*'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',*/ 'client/js/lib/jquery-2.1.4.min'],
+		underscore: 'client/js/lib/underscore-1.8.3',
+		favico: 'client/js/lib/favico-0.3.10.min',
+		jqueryui: 'client/js/lib/jquery-ui.min',
+		jqueryqtip: 'client/js/lib/jquery.qtip.min',
+		store: 'client/js/lib/store.min',
+		moment: 'client/js/lib/moment.min',
+		store: 'client/js/lib/store.min',
+		checks: 'client/js/sbb/checks-mru',
+		checkworker: 'client/js/sbb/fetchCheckWorkerNode',
+		image: 'client/js/lib/require-image',
+		cssloader: 'client/js/sbb/cssloader',
+		favloader: 'client/js/sbb/favloader',
+		check: 'client/js/sbb/check',
     },
 	//map: {
 		//'*': {
