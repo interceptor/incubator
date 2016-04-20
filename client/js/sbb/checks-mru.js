@@ -612,7 +612,7 @@ define(function (require) {
 				var loadingRow = [["checkTimer", timerDiv], ["url", "Querying : " + url + "..."], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""]];
 				safeLog("Adding Loading-Status row with ID [" + createValidID(url) +" ] to Table: " + tableId + " at index [" + index + "]");
 				addTableRow(tableId, url, loadingRow, index);
-				addTimer(timerId, getTimeStamp(checksUtil.timeFormat));
+				addTimer(timerId, getTimeStamp());
 			}
 					
 			function addCheckResultToTable(checkHtml, tableId, checkURL, timeElapsed) {
