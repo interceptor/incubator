@@ -580,7 +580,9 @@ define(function (require) {
 				timerDiv.innerHTML =  '00:00:020'; // default to 20ms in case it is less....
 				startTime = moment(startTime, checksUtil.dateFormat);
 				var timeinterval = setInterval(function() {
-					timerDiv.innerHTML = getMillisecondsPassedSince(startTime);
+					timePassedMillis = getMillisecondsPassedSince(startTime);
+					// hack works only for periods shorten than 24h - which is good enough for this purpose
+					timerDiv.innerHTML = moment('2000-01-01 00:00:00').add(moment.duration(timePassedMillis)).format(checksUtil.timeFormat);
 				},20); 	// https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval#Example -> TODO use minidaemon.js
 			}
 			
