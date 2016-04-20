@@ -31,10 +31,10 @@ requirejs.config({
 
 require(['checks', 'cssloader', 'favloader'], function (Checks, cssloader, favloader) {
 	console.log("Running bootstrap...");
-    var cssbudtable = require.toUrl("css/bud-table.css");
-	var cssjqueryqtip = require.toUrl("css/jquery.qtip.min.css");
-	var favicon32x32 = require.toUrl("favicons/favicon-32x32.png");
-	var favicon96x96 = require.toUrl("favicons/favicon-96x96.png");
+    var cssbudtable = require.toUrl("client/css/bud-table.css");
+	var cssjqueryqtip = require.toUrl("client/css/jquery.qtip.min.css");
+	var favicon32x32 = require.toUrl("client/favicons/favicon-32x32.png");
+	var favicon96x96 = require.toUrl("client/favicons/favicon-96x96.png");
 	favloader.link(favicon32x32);
 	favloader.link(favicon96x96);
     cssloader.link(cssbudtable);
