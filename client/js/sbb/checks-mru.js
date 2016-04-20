@@ -10,15 +10,15 @@ define(function (require) {
 		var CheckservletsGenerated = require('js/app/checks-generated.js');
 		var checkworker = require('checkworker');
 		// images
-		var imgreload = require('image!images/open-iconic/svg/reload.svg!rel');
-		var imgwarning = require('image!images/open-iconic/svg/warning.svg!rel');
-		var imgcirclecheck = require('image!images/open-iconic/svg/circle-check.svg!rel');
-		var imgcollapseup = require('image!images/open-iconic/svg/collapse-up.svg!rel');
-		var imgsun = require('image!images/open-iconic/svg/sun.svg!rel');
-		var imgrain = require('image!images/open-iconic/svg/rain.svg!rel');
-		var imgmagnifyingglass = require('image!images/open-iconic/svg/magnifying-glass.svg!rel');
-		var imgextlink = require('image!images/icons/ext_link.svg!rel');
-		var imgsplunk = require('image!images/icons/splunk.svg!rel');
+		var imgreload = require('image!client/images/open-iconic/svg/reload.svg!rel');
+		var imgwarning = require('image!client/images/open-iconic/svg/warning.svg!rel');
+		var imgcirclecheck = require('image!client/images/open-iconic/svg/circle-check.svg!rel');
+		var imgcollapseup = require('image!client/images/open-iconic/svg/collapse-up.svg!rel');
+		var imgsun = require('image!client/images/open-iconic/svg/sun.svg!rel');
+		var imgrain = require('image!client/images/open-iconic/svg/rain.svg!rel');
+		var imgmagnifyingglass = require('image!client/images/open-iconic/svg/magnifying-glass.svg!rel');
+		var imgextlink = require('image!client/images/icons/ext_link.svg!rel');
+		var imgsplunk = require('image!client/images/icons/splunk.svg!rel');
 		
 		return function () {
 			safeLog("Loading module checks-mru...");
