@@ -1,4 +1,4 @@
-requirejs.config({
+require.config({
     //By default load any module IDs from client/js/lib
     baseUrl: '/build-status',
 	waitSeconds : 20,
@@ -18,6 +18,7 @@ requirejs.config({
 		favloader: 'client/js/sbb/favloader',
 		check: 'client/js/sbb/check',
     },
+	waitSeconds: 15
 	//map: {
 		//'*': {
 		//'css': 'lib/require-css.min'

@@ -19,17 +19,7 @@ define(function (require) {
 		var imgmagnifyingglass = require('image!client/images/open-iconic/svg/magnifying-glass.svg!rel');
 		var imgextlink = require('image!client/images/icons/ext_link.svg!rel');
 		var imgsplunk = require('image!client/images/icons/splunk.svg!rel');
-		
-		// additional config 
-		require.config({
-			config: {
-				// http://momentjs.com/docs/#/use-it/require-js/
-				moment: {
-					noGlobal: true
-				}
-			}
-		});
-		
+				
 		return function () {
 			safeLog("Loading module checks-mru...");
 			
@@ -591,7 +581,7 @@ define(function (require) {
 			function lastUpdateTimer(rowId, dataId) {
 				var row = document.getElementById(createValidID(rowId));
 				var lastUpdateElement = $(row).find('#' + dataId);
-				var lastUpdate = moment();
+				var lastUpdate = getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS');
 				$(lastUpdateElement).html(getHumanTimePassedSince(lastUpdate));
 				var timeinterval = setInterval(function() {
 					$(lastUpdateElement).html(getHumanTimePassedSince(lastUpdate));
@@ -617,7 +607,7 @@ define(function (require) {
 				var loadingRow = [["checkTimer", timerDiv], ["url", "Querying : " + url + "..."], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""]];
 				safeLog("Adding Loading-Status row with ID [" + createValidID(url) +" ] to Table: " + tableId + " at index [" + index + "]");
 				addTableRow(tableId, url, loadingRow, index);
-				addTimer(timerId, moment());
+				addTimer(timerId, getTimeStamp('YYYY-MM-DD HH:mm:ss:SSS'));
 			}
 					
 			function addCheckResultToTable(checkHtml, tableId, checkURL, timeElapsed) {
@@ -832,7 +822,7 @@ define(function (require) {
 				var dateFormat = 'YYYY-MM-DD HH:mm:ss:SSS';
 				$.each(checkHistoryArrays, function(key, historyArray) {
 					if (historyArray[1] == status) {
-						if (moment(oldestHistoryEntry[0]).isValid()) { // check if there is already an entry
+						if (moment(oldestHistoryEntry[0], dateFormat).isValid()) { // check if there is already an entry
 							if (moment(historyArray[0], dateFormat).isBefore(moment(oldestHistoryEntry[0], dateFormat))) { // if its older, set it as new oldest
 								oldestHistoryEntry = historyArray;
 							}
@@ -872,7 +862,7 @@ define(function (require) {
 					var retVal;
 					if (moment(arrayA[0], dateFormat).isAfter(moment(arrayB[0], dateFormat))) {
 						retVal = 1;
-					} else if (moment(arrayA[0]).isBefore(moment(arrayB[0]))) {
+					} else if (moment(arrayA[0], dateFormat).isBefore(moment(arrayB[0], dateFormat))) {
 						retVal = -1;
 					} else {
 						retVal = 0;
