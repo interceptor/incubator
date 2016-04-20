@@ -604,7 +604,7 @@ define(function (require) {
 				var loadingRow = [["status status-error", errorMsg], ["url",  url], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""]];
 				safeLog("Adding Error-Status row with ID [" + createValidID(url) +" ] to Table: " + tableId + " at index [" + 0 + "]");
 				addTableRow(tableId, url, loadingRow, 0);
-				checkHistoryManager(tableId, url, errorMsg, getTimeStamp());
+				checkHistoryManager(tableId, url, errorMsg, "[n/a]", getTimeStamp());
 			}
 			
 			function addLoadingRowToTable(tableId, url, index) {
@@ -636,7 +636,7 @@ define(function (require) {
 				var checkResultRow = [[statusClass, checkResultMap.status + " [" + timeElapsed + "]"], ["applicationName", truncate(checkResultMap.applicationName, 35)], ["artefactName", checkResultMap.artefactName], ["artefactVersion", checkResultMap.artefactVersion], ["node", checkResultMap.node], ["port", checkResultMap.port], ["buildTimestamp", checkResultMap.buildTimestamp], ["checkLevelOneUrl", checkResultMap.checkLevelOneUrl], ["lastUpdateTime", checkResultMap.lastUpdateTime]];
 				safeLog("Adding Check-Status row to Table: " + tableId);
 				addTableRow(tableId, checkURL, checkResultRow, 0);
-				checkHistoryManager(tableId, checkURL, checkResultMap.status, checkResultMap.lastUpdateTime);
+				checkHistoryManager(tableId, checkURL, checkResultMap.status, timeElapsed, checkResultMap.lastUpdateTime);
 				// lunrIndex.add({"id": createValidID(tableId+checkURL), "artefactName": checkResultMap.artefactName, "artefactVersion": checkResultMap.artefactVersion, "node": checkResultMap.node, "port": checkResultMap.port, "applicationName": checkResultMap.applicationName, "status": checkResultMap.status});
 				lastUpdateTimer(tableId + checkURL, tableId + "-lastUpdateTime");
 			}
@@ -767,14 +767,14 @@ define(function (require) {
 			}
 
 			// https://github.com/marcuswestin/store.js/
-			function checkHistoryManager(tableId, checkURL, status, timestamp) {
+			function checkHistoryManager(tableId, checkURL, status, responseTime, timestamp) {
 				//localStorage.clear();
 				var historyId = createValidID(tableId + checkURL);
 				var maxHistoryEntries = 9;
 				var checkHistoryArrays = $.makeArray(store.get(historyId));
 				if (checkHistoryArrays != null && checkHistoryArrays.length > 0) { // add new history entry
 					safeLog("Adding new History Entry [" + timestamp + "] with Value [" + status + "]");
-					checkHistoryArrays.push([timestamp, status])
+					checkHistoryArrays.push([timestamp, status + " [" + responseTime + "]"])
 					oldestHistoryOK = getOldestHistoryEntryByStatus(checkHistoryArrays, "OK");
 					oldestHistoryNOK = getOldestHistoryEntryByStatus(checkHistoryArrays, "NOK");
 					checkHistoryArrays = pruneCheckHistory(checkHistoryArrays, maxHistoryEntries);
