@@ -1,6 +1,6 @@
 requirejs.config({
     //By default load any module IDs from js/lib
-    baseUrl: '/status-2.0/beta',
+    baseUrl: '/build-status',
 	waitSeconds : 20,
 	paths: {
         jquery: [/*'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',*/ 'js/lib/jquery-2.1.4.min'],
