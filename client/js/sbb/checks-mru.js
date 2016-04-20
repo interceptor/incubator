@@ -937,8 +937,9 @@ define(function (require) {
 						stringCheckHistory = stringCheckHistory + " - ";
 						stringCheckHistory = stringCheckHistory + "<span class='" + valueDivClass + "'>" + historyArray[1].checkStatus + "</span>";
 						stringCheckHistory = stringCheckHistory + " [";
-						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'>" + historyArray[1].responseTime +  "</span><br>";
+						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'>" + historyArray[1].responseTime +  "</span>";
 						stringCheckHistory = stringCheckHistory + "]";
+						stringCheckHistory = stringCheckHistory + "<br>";
 					});
 					addTooltipInfoToElement(tableCells[0], stringCheckHistory);
 				} else {
