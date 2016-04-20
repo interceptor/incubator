@@ -767,14 +767,17 @@ define(function (require) {
 			}
 
 			// https://github.com/marcuswestin/store.js/
-			function checkHistoryManager(tableId, checkURL, status, responseTime, timestamp) {
+			function checkHistoryManager(tableId, checkURL, checkStatus, responseTime, timestamp) {
 				//localStorage.clear();
 				var historyId = createValidID(tableId + checkURL);
 				var maxHistoryEntries = 9;
 				var checkHistoryArrays = $.makeArray(store.get(historyId));
+				var status = {};
+				status.checkStatus = checkStatus;
+				status.responseTime = responseTime;
 				if (checkHistoryArrays != null && checkHistoryArrays.length > 0) { // add new history entry
-					safeLog("Adding new History Entry [" + timestamp + "] with Value [" + status + "]");
-					checkHistoryArrays.push([timestamp, status + " [" + responseTime + "]"])
+					safeLog("Adding new History Entry [" + timestamp + "] with Status [" + status.checkStatus + "] duration [" + status.responseTime + "]");
+					checkHistoryArrays.push([timestamp, status])
 					oldestHistoryOK = getOldestHistoryEntryByStatus(checkHistoryArrays, "OK");
 					oldestHistoryNOK = getOldestHistoryEntryByStatus(checkHistoryArrays, "NOK");
 					checkHistoryArrays = pruneCheckHistory(checkHistoryArrays, maxHistoryEntries);
@@ -788,7 +791,7 @@ define(function (require) {
 					}
 					sortCheckHistory(checkHistoryArrays);
 				} else { // start first history entry
-					safeLog("Adding first History Entry [" + timestamp + "] with Value [" + status + "]");
+					safeLog("Adding first History Entry [" + timestamp + "] with Status [" + status.checkStatus + "] duration [" + status.responseTime + "]");
 					checkHistoryArrays = [];
 					checkHistoryArrays.push([timestamp, status]);
 				}
@@ -929,8 +932,11 @@ define(function (require) {
 					checkHistoryArrays = store.get(historyId);
 					var stringCheckHistory = "";
 					$.each(checkHistoryArrays, function(key, historyArray) {
-						valueDivClass = (historyArray[1]=="OK") ? "check-history-ok" : "check-history-nok"; // for css formatting
-						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'>" + historyArray[0] +  "</span> - <span class='" + valueDivClass + "'>" + historyArray[1] + "</span><br>";
+						valueDivClass = (historyArray[1].checkStatus == "OK") ? "check-history-ok" : "check-history-nok"; // for css formatting
+						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'>" + historyArray[0] + "</span>";
+						stringCheckHistory = stringCheckHistory + "-";
+						stringCheckHistory = stringCheckHistory + "<span class='" + valueDivClass + "'>" + historyArray[1].checkStatus + "</span>";
+						stringCheckHistory = stringCheckHistory + "<span class='checkHistoryTimestamp'> [" + historyArray[1].responseTime +  "]</span><br>";
 					});
 					addTooltipInfoToElement(tableCells[0], stringCheckHistory);
 				} else {
