@@ -571,15 +571,16 @@ define(function (require) {
 				}
 			};
 			
-			function getFormattedTimePassedSince(startTime, format) {
-				return moment(moment().subtract(startTime)).format(format);
+			function getMillisecondsPassedSince(startTime) {
+				return moment().diff(startTime, 'milliseconds');
 			}
 			
 			function addTimer(elementId, startTime) {
 				var timerDiv = document.getElementById(elementId);
 				timerDiv.innerHTML =  '00:00:020'; // default to 20ms in case it is less....
+				startTime = moment(startTime, checksUtil.dateFormat);
 				var timeinterval = setInterval(function() {
-					timerDiv.innerHTML = getFormattedTimePassedSince(startTime, checksUtil.timeFormat);
+					timerDiv.innerHTML = getMillisecondsPassedSince(startTime);
 				},20); 	// https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval#Example -> TODO use minidaemon.js
 			}
 			
