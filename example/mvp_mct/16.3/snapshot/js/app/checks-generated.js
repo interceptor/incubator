@@ -4,7 +4,7 @@ var Check = require('check');
 var Checkservlets = function() {
 var stageInfo = {majorVersion:'16.3', stage:'snapshot'}
 var checks = []
-checks.push(new Check('mct8_anbieter_cl', 'snapshot', ['https://wasd85mcta2.sbb.ch:16403/mct/v9/anbieter/vertrieb/admin/check'])),
+checks.push(new Check('mct8_anbieter_cl', 'snapshot', ['https://wasd85mctb2.sbb.ch:19303/mct/v9/anbieter/vertrieb/admin/check'])),
 
 this.stageInfo = stageInfo;
 this.checks = checks;
