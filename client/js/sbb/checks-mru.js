@@ -1,4 +1,4 @@
-define(function (require) {		
+define(function (require) {
 		// libs
 		var $ = require('jquery');
 		var _ = require('underscore');
@@ -19,6 +19,16 @@ define(function (require) {
 		var imgmagnifyingglass = require('image!client/images/open-iconic/svg/magnifying-glass.svg!rel');
 		var imgextlink = require('image!client/images/icons/ext_link.svg!rel');
 		var imgsplunk = require('image!client/images/icons/splunk.svg!rel');
+		
+		// additional config 
+		require.config({
+			config: {
+				// http://momentjs.com/docs/#/use-it/require-js/
+				moment: {
+					noGlobal: true
+				}
+			}
+		});
 		
 		return function () {
 			safeLog("Loading module checks-mru...");
