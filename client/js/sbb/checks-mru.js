@@ -23,7 +23,7 @@ define(function (require) {
 		var checksUtil = {};
 		
 		checksUtil.dateFormat = "YYYY-MM-DD HH:mm:ss:SSS";
-		
+		checksUtil.timeFormat = "mm:ss:SSS";
 				
 		return function () {
 			safeLog("Loading module checks-mru...");
@@ -579,7 +579,7 @@ define(function (require) {
 				var timerDiv = document.getElementById(elementId);
 				timerDiv.innerHTML =  '00:00:020'; // default to 20ms in case it is less....
 				var timeinterval = setInterval(function() {
-					timerDiv.innerHTML = getFormattedTimePassedSince(startTime, 'mm:ss:SSS');
+					timerDiv.innerHTML = getFormattedTimePassedSince(startTime, checksUtil.timeFormat);
 				},20); 	// https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval#Example -> TODO use minidaemon.js
 			}
 			
@@ -612,7 +612,7 @@ define(function (require) {
 				var loadingRow = [["checkTimer", timerDiv], ["url", "Querying : " + url + "..."], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""], ["colSpan", ""]];
 				safeLog("Adding Loading-Status row with ID [" + createValidID(url) +" ] to Table: " + tableId + " at index [" + index + "]");
 				addTableRow(tableId, url, loadingRow, index);
-				addTimer(timerId, getTimeStamp());
+				addTimer(timerId, getTimeStamp(checksUtil.timeFormat));
 			}
 					
 			function addCheckResultToTable(checkHtml, tableId, checkURL, timeElapsed) {
