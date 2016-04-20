@@ -1,5 +1,4 @@
 require.config({
-    //By default load any module IDs from client/js/lib
     baseUrl: '/build-status',
 	waitSeconds : 20,
 	paths: {
@@ -18,16 +17,6 @@ require.config({
 		favloader: 'client/js/sbb/favloader',
 		check: 'client/js/sbb/check',
     },
-	waitSeconds: 15
-	//map: {
-		//'*': {
-		//'css': 'lib/require-css.min'
-		//'css': 'css'
-		//}
-	//}
-	//shim: {
-	//	'uri' : {'dep': ['jquery'], 'exports': 'URI'}
-	//}
 });
 
 require(['checks', 'cssloader', 'favloader'], function (Checks, cssloader, favloader) {
