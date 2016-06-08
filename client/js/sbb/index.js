@@ -1,4 +1,7 @@
 define(function (require) {
+	// libs
+	var $ = require('jquery');
+	require('dataTables');
 	var IndexPageDataSetGenerated = require('indexPageDataSet.js');
 	$(document).ready(function() {
 		var indexPageData = new IndexPageDataSetGenerated();
