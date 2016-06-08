@@ -10,6 +10,7 @@ define(function (require) {
 				"paging": false,
 				"data": indexPageData.indexPageDataSet,
 				"columns": [
+					{title: "Mega/Stage"},
 					{title: "Snapshot"},
 					{title: "Stabil"},
 					{title: "Edu-T"},
