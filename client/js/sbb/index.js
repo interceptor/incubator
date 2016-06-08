@@ -1,7 +1,7 @@
 define(function (require) {
-	var IndexPageDataSet = require('indexPageDataSet.js');
-	var indexPageData = new IndexPageDataSet();
+	var IndexPageDataSetGenerated = require('indexPageDataSet.js');
 	$(document).ready(function() {
+		var indexPageData = new IndexPageDataSetGenerated();
 		$('#build-status-index').DataTable( {
 			"paging": false,
 			"data": indexPageData.indexPageDataSet,
