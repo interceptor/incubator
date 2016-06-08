@@ -1,11 +1,11 @@
 define(function (require) {
 	// libs
 	var $ = require('jquery');
-	require('dataTables');
+	var datatables =  require('datatables');
 	var IndexPageDataSetGenerated = require('indexPageDataSet.js');
 	$(document).ready(function() {
 		var indexPageData = new IndexPageDataSetGenerated();
-		$('#build-status-index').DataTable( {
+		$('#build-status-index').dataTable( {
 			"paging": false,
 			"data": indexPageData.indexPageDataSet,
 			"columns": [
