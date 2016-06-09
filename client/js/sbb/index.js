@@ -9,7 +9,7 @@ define(function (require) {
 			$('#build-status-index').dataTable( {
 				"paging": false,
 				// "ajax": indexPageData.indexPageDataSet,
-				"ajax": indexPageData.json,
+				"ajax": "indexPageData.json",
 				"columns": [
 					{data: "Mega/Stage"},
 					{data: "Snapshot"},
