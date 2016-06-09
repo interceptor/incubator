@@ -8,16 +8,16 @@ define(function (require) {
 			var indexPageData = new IndexPageDataSetGenerated();
 			$('#build-status-index').dataTable( {
 				"paging": false,
-				"data": indexPageData.indexPageDataSet,
+				"ajax": indexPageData.indexPageDataSet,
 				"columns": [
-					{title: "Mega/Stage"},
-					{title: "Snapshot"},
-					{title: "Stabil"},
-					{title: "Edu-T"},
-					{title: "Test"},
-					{title: "Integration"},
-					{title: "Schulung"},
-					{title: "Produktion"},
+					{data: "Mega/Stage"},
+					{data: "Snapshot"},
+					{data: "Stabil"},
+					{data: "Edu-T"},
+					{data: "Test"},
+					{data: "Integration"},
+					{data: "Schulung"},
+					{data: "Produktion"},
 				]
 			});
 		});
