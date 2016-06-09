@@ -8,7 +8,7 @@ define(function (require) {
 			// var indexPageData = new IndexPageDataSetGenerated();
 			$('#build-status-index').dataTable( {
 				"paging": false,
-				"processing": true
+				"processing": true,
 				// "ajax": indexPageData.indexPageDataSet,
 				"ajax": "indexPageData.json",
 				"columns": [
