@@ -23,12 +23,6 @@ define(function (require) {
 				],
 				columnDefs: [
 					{targets: '_all', defaultContent: "-" },
-					{
-					"targets": 0,
-					"data": "download_link",
-					"render": function ( data, type, full, meta ) {
-						return '<a href="'+data+'">Download</a>';
-					}
 				]
 			});
 		});
