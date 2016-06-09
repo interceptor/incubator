@@ -21,9 +21,9 @@ define(function (require) {
 				columnDefs: [
 					{targets: '_all', defaultContent: "-" },
 					{
-					"targets": _all,
+					"targets": '_all',
 					"data": "download_link",
-					"render": function ( data, type, full, meta ) {return '<a href="' + data + '">"' + data + '"</a>';}
+					"render": function ( data, type, full, meta ) {return '<a href="' + data + '">' + data + '</a>';}
 					}
 				]
 			});
