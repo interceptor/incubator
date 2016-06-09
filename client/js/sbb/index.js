@@ -9,7 +9,7 @@ define(function (require) {
 				"processing": true,
 				"ajax": "indexPageData.json",
 				"columns": [
-					{title: "Mega/Stage", data: "megaStage"},
+					{title: "Mega/Stage", data: "mega"},
 					{title: "Snapshot", data: "snapshot"},
 					{title: "Stabil", data: "stabil"},
 					{title: "Edut", data: "edut"},
