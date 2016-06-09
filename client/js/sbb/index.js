@@ -2,14 +2,11 @@ define(function (require) {
 	// libs
 	var $ = require('jquery');
 	var datatables =  require('datatables');
-	var IndexPageDataSetGenerated = require('indexPageDataSet.js');
 	return function () {
 		$(document).ready(function() {
-			// var indexPageData = new IndexPageDataSetGenerated();
 			$('#build-status-index').dataTable( {
 				"paging": false,
 				"processing": true,
-				// "ajax": indexPageData.indexPageDataSet,
 				"ajax": "indexPageData.json",
 				"columns": [
 					{title: "Mega/Stage", data: "megaStage"},
@@ -24,9 +21,9 @@ define(function (require) {
 				columnDefs: [
 					{targets: '_all', defaultContent: "-" },
 					{
-					"targets": 0,
+					"targets": _all,
 					"data": "download_link",
-					"render": function ( data, type, full, meta ) {return '<a href="'+data+'">Download</a>';}
+					"render": function ( data, type, full, meta ) {return '<a href="' + data + '">' + data + '</a>';}
 					}
 				]
 			});
