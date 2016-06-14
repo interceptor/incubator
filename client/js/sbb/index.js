@@ -4,7 +4,7 @@ define(function (require) {
 	var datatables =  require('datatables');
 	return function () {
 		$(document).ready(function() {
-			$('#build-status-index').dataTable( {
+			$('#build-status-index').DataTable( {
 				"paging": false,
 				"processing": true,
 				"ajax": "indexPageData.json",
@@ -18,11 +18,15 @@ define(function (require) {
 					{title: "Schulung", data: "schulung"},
 					{title: "Produktion", data: "produktion"},
 				],
-				columnDefs: [
-					{targets: '_all', defaultContent: "-" },
+				"columnDefs": [
+					{"targets": '_all', "defaultContent": "-" },
 					{
 					"targets": '_all',
-					"render": function (data, type, row) {return '<a href="' + data + '/' + row + '">' + data + '</a>';}
+					"render": function (data, type, row) {
+							if (type === "display" ) && data != "-") {
+								return '<a href="' + data + '/' + row + '">' + data + '</a>';
+							}
+						}
 					}
 				]
 			});
