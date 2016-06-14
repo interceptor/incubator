@@ -9,7 +9,7 @@ define(function (require) {
 				"searching": false,
 				"processing": true,
 				"jQueryUI": true,
-				"autoWidth": false,
+				"autoWidth": true,
 				"ajax": {
 					"url": "indexPageData.json",
 					"dataSrc": "data"
