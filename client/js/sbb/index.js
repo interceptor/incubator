@@ -28,8 +28,9 @@ define(function (require) {
 					{"targets": '_all', "defaultContent": "-" },
 					{
 					"targets": '_all',
-					"render": function(data, type, row) {
+					"render": function(data, type, row, meta) {
 							var retVal = data;
+							console.log("Cell: [" +  table.cell().index().row + "/" + table.cell().index().column + "] value [" + data + "]");
 							if (type === "display" && data != "-" && table.cell().index().column != 0) {
 								retVal =  '<a href="' + row.mega + '/' + data + "/" + row.stage + '">' + data + '</a>';
 							}
