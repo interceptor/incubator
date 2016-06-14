@@ -8,23 +8,26 @@ define(function (require) {
 			$('#build-status-index').dataTable( {
 				"paging": false,
 				"processing": true,
-				"ajax": "indexPageData.json",
+				"ajax": {
+					"url": "indexPageData.json",
+					"dataSrc": "tableData"
+				},
 				"columns": [
-					{title: "Mega/Stage", ajax: "mega"},
-					{title: "Snapshot", ajax: "snapshot"},
-					{title: "Stabil", ajax: "stabil"},
-					{title: "Edut", ajax: "edut"},
-					{title: "Test", ajax: "test"},
-					{title: "Integration", ajax: "integration"},
-					{title: "Schulung", ajax: "schulung"},
-					{title: "Produktion", ajax: "produktion"},
+					{title: "Mega/Stage", "tableData": "mega"},
+					{title: "Snapshot", "tableData": "snapshot"},
+					{title: "Stabil", "tableData": "stabil"},
+					{title: "Edut", "tableData": "edut"},
+					{title: "Test", "tableData": "test"},
+					{title: "Integration", "tableData": "integration"},
+					{title: "Schulung", "tableData": "schulung"},
+					{title: "Produktion", "tableData": "produktion"},
 				],
 				columnDefs: [
-					{targets: '_all', defaultContent: "-" },
+					{"targets": '_all', defaultContent: "-" },
 					{
-					"targets": 0,
+					"targets": '_all',
 					"data": "download_link",
-					"render": function ( data, type, full, meta ) {return '<a href="'+data+'">Download</a>';}
+					"render": function (data, type, full, meta) {return '<a href="' + data + '">Download</a>';}
 					}
 				]
 			});
