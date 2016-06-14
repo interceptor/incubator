@@ -2,15 +2,14 @@ define(function (require) {
 	// libs
 	var $ = require('jquery');
 	var datatables =  require('datatables');
-	var IndexPageDataSetGenerated = require('indexPageDataSet.js');
 	return function () {
 		$(document).ready(function() {
-			$('#build-status-index').dataTable( {
+			$('#build-status-index').DataTable( {
 				"paging": false,
 				"processing": true,
 				"ajax": {
 					"url": "indexPageData.json",
-					"dataSrc": "tableData"
+					"dataSrc": "data"
 				},
 				"columns": [
 					{title: "Mega/Stage", "tableData": "mega"},
@@ -20,7 +19,7 @@ define(function (require) {
 					{title: "Test", "tableData": "test"},
 					{title: "Integration", "tableData": "integration"},
 					{title: "Schulung", "tableData": "schulung"},
-					{title: "Produktion", "tableData": "produktion"},
+					{title: "Produktion", "tableData": "produktion"}
 				],
 				columnDefs: [
 					{"targets": '_all', defaultContent: "-" },
