@@ -30,7 +30,7 @@ define(function (require) {
 					"targets": '_all',
 					"render": function(data, type, row) {
 							var retVal = data;
-							if (type === "display" && data != "-" && table.cell(this).index() != 0) {
+							if (type === "display" && data != "-" && table.cell().index().column != 0) {
 								retVal =  '<a href="' + row.mega + '/' + data + "/" + row.stage + '">' + data + '</a>';
 							}
 							return retVal;
