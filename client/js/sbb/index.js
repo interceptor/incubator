@@ -30,8 +30,8 @@ define(function (require) {
 					"targets": '_all',
 					"render": function(data, type, row, meta) {
 							var retVal = data;
-							console.log("Cell: [" +  table.cell().index().row + "/" + table.cell().index().column + "] value [" + data + "]");
-							if (type === "display" && data != "-" && table.cell().index().column != 0) {
+							console.log("Cell row/col: [" + meta.row + "/" + meta.col + "] value [" + data + "]");
+							if (type === "display" && data != "-" && meta.col != 1) {
 								retVal =  '<a href="' + row.mega + '/' + data + "/" + row.stage + '">' + data + '</a>';
 							}
 							return retVal;
