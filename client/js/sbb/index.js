@@ -6,27 +6,35 @@ define(function (require) {
 		$(document).ready(function() {
 			$('#build-status-index').DataTable( {
 				"paging": false,
+				"searching": false,
 				"processing": true,
+				"jQueryUI": true,
+				"autoWidth": false,
 				"ajax": {
 					"url": "indexPageData.json",
 					"dataSrc": "data"
 				},
 				"columns": [
-					{title: "Mega/Stage", "data": "mega"},
-					{title: "Snapshot", "data": "snapshot"},
-					{title: "Stabil", "data": "stabil"},
-					{title: "Edut", "data": "edut"},
-					{title: "Test", "data": "test"},
-					{title: "Integration", "data": "integration"},
-					{title: "Schulung", "data": "schulung"},
-					{title: "Produktion", "data": "produktion"}
+					{"title": "Mega/Stage", "data": "mega"},
+					{"title": "Snapshot", "data": "snapshot"},
+					{"title": "Stabil", "data": "stabil"},
+					{"title": "Edut", "data": "edut"},
+					{"title": "Test", "data": "test"},
+					{"title": "Integration", "data": "integration"},
+					{"title": "Schulung", "data": "schulung"},
+					{"title": "Produktion", "data": "produktion"},
 				],
-				columnDefs: [
-					{"targets": '_all', defaultContent: "-" },
+				"columnDefs": [
+					{"targets": '_all', "defaultContent": "-" },
 					{
 					"targets": '_all',
-					// "data": "download_link",
-					"render": function (data, type, full, meta) {return '<a href="' + data + '">Download</a>';}
+					"render": function(data, type, row) {
+							var retVal = data;
+							if (type === "display" && data != "-") {
+								retVal =  '<a href="' + row.mega + '/' + data + "/" + data + '">' + data + '</a>';
+							}
+							return retVal;
+						}
 					}
 				]
 			});
