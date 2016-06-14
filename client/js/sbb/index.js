@@ -4,7 +4,7 @@ define(function (require) {
 	var datatables =  require('datatables');
 	return function () {
 		$(document).ready(function() {
-			$('#build-status-index').DataTable( {
+			table = $('#build-status-index').DataTable( {
 				"paging": false,
 				"searching": false,
 				"processing": true,
@@ -30,8 +30,8 @@ define(function (require) {
 					"targets": '_all',
 					"render": function(data, type, row) {
 							var retVal = data;
-							if (type === "display" && data != "-") {
-								retVal =  '<a href="' + row.mega + '/' + data + "/" + data + '">' + data + '</a>';
+							if (type === "display" && data != "-" && table.cell(this).index() != 0) {
+								retVal =  '<a href="' + row.mega + '/' + data + "/" + row.stage + '">' + data + '</a>';
 							}
 							return retVal;
 						}
