@@ -26,9 +26,11 @@ define(function (require) {
 					{
 					"targets": '_all',
 					"render": function(data, type, row) {
-							if (type === "display" && "data" != "-") {
-								return '<a href="' + row.mega + '/' + data + "/" + data + '">' + data + '</a>';
+							var retVal = data;
+							if (type === "display" && data != "-") {
+								retVal =  '<a href="' + row.mega + '/' + data + "/" + data + '">' + data + '</a>';
 							}
+							return retVal;
 						}
 					}
 				]
