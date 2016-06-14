@@ -33,9 +33,9 @@ define(function (require) {
 							console.log("Cell row/col: [" + meta.row + "/" + meta.col + "] value [" + data + "]");
 							if (type === "display" && data != "-" && meta.col != 0) { // do not create link on first column
 								var links = [];
-								for (entry in data) {
+								$.each(data, function(index, entry) {
 									links.push('<a href="' + row.mega + '/' + entry + "/" + row.stage + '">' + entry + '</a>')
-								}
+								});
 								retVal = links;
 							}
 							return retVal;
