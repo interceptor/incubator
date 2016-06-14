@@ -23,7 +23,7 @@ define(function (require) {
 					{
 					"targets": '_all',
 					"data": "download_link",
-					"render": function (data, type, full, meta) {return '<a href="' + full.megaStage + '/' + data + '">' + data + '</a>';}
+					"render": function (data, type, full, meta) {return '<a href="' + full.mega + '/' + data + '">' + data + '</a>';}
 					}
 				]
 			});
