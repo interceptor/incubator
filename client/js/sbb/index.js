@@ -12,20 +12,20 @@ define(function (require) {
 					"dataSrc": "data"
 				},
 				"columns": [
-					{title: "Mega/Stage", "tableData": "mega"},
-					{title: "Snapshot", "tableData": "snapshot"},
-					{title: "Stabil", "tableData": "stabil"},
-					{title: "Edut", "tableData": "edut"},
-					{title: "Test", "tableData": "test"},
-					{title: "Integration", "tableData": "integration"},
-					{title: "Schulung", "tableData": "schulung"},
-					{title: "Produktion", "tableData": "produktion"}
+					{title: "Mega/Stage", "data": "mega"},
+					{title: "Snapshot", "data": "snapshot"},
+					{title: "Stabil", "data": "stabil"},
+					{title: "Edut", "data": "edut"},
+					{title: "Test", "data": "test"},
+					{title: "Integration", "data": "integration"},
+					{title: "Schulung", "data": "schulung"},
+					{title: "Produktion", "data": "produktion"}
 				],
 				columnDefs: [
 					{"targets": '_all', defaultContent: "-" },
 					{
 					"targets": '_all',
-					"data": "download_link",
+					// "data": "download_link",
 					"render": function (data, type, full, meta) {return '<a href="' + data + '">Download</a>';}
 					}
 				]
