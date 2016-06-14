@@ -4,7 +4,7 @@ define(function (require) {
 	var datatables =  require('datatables');
 	return function () {
 		$(document).ready(function() {
-			$('#build-status-index')."data"Table( {
+			$('#build-status-index').DataTable( {
 				"paging": false,
 				"searching": false,
 				"processing": true,
