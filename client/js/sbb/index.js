@@ -22,8 +22,7 @@ define(function (require) {
 					{targets: '_all', defaultContent: "-" },
 					{
 					"targets": '_all',
-					"data": null, // use the full data source object for the renderer's source
-					"render": function (data, type, full, meta) {return '<a href="' + full.mega + '/' + data + '">' + data + '</a>';}
+					"render": function (data, type, row) {return '<a href="' + data + '/' + row + '">' + data + '</a>';}
 					}
 				]
 			});
