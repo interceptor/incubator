@@ -32,7 +32,11 @@ define(function (require) {
 							var retVal = data;
 							console.log("Cell row/col: [" + meta.row + "/" + meta.col + "] value [" + data + "]");
 							if (type === "display" && data != "-" && meta.col != 0) { // do not create link on first column
-								retVal =  '<a href="' + row.mega + '/' + data + "/" + row.stage + '">' + data + '</a>';
+								var links = [];
+								for (entry in data) {
+									links.push('<a href="' + row.mega + '/' + entry + "/" + row.stage + '">' + entry + '</a>')
+								}
+								retVal = links;
 							}
 							return retVal;
 						}
