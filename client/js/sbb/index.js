@@ -23,7 +23,7 @@ define(function (require) {
 					{
 					"targets": '_all',
 					"render": function (data, type, row) {
-							if (type === "display" ) && data != "-") {
+							if (type === "display" && data != "-") {
 								return '<a href="' + data + '/' + row + '">' + data + '</a>';
 							}
 						}
