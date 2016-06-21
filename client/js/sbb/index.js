@@ -30,11 +30,12 @@ define(function (require) {
 					"targets": '_all',
 					"render": function(data, type, row, meta) {
 							var retVal = data;
-							console.log("Cell row/col: [" + meta.row + "/" + meta.col + "] value [" + data + "]");
+							console.log("Cell row/col: [" + meta.row + "(" + meta.settings.aoColumns[meta.col].data + ")" + "/" + meta.col + "(" + meta.settings.aoColumns[meta.col].data + ")" + "] with value [" + data + "]");
 							if (type === "display" && data != "-" && meta.col != 0) { // do not create link on first column
 								var links = [];
 								$.each(data, function(index, entry) {
-									links.push('<a href="' + row.mega + '/' + entry + "/" + row.stage + '">' + entry + '</a>')
+									stage = meta.settings.aoColumns[meta.col].data;
+									links.push('<a href="' + row.mega + '/' + entry + "/" + stage + '">' + entry + '</a>')
 								});
 								retVal = links;
 							}
