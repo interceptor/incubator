@@ -1,0 +1,35 @@
+table.dataTable {
+     margin: 0px;
+     padding: 0px;
+     width: 100%;
+}
+
+table.dataTable tr:hover td {
+     background-color: #53a3e0;
+}
+
+table.dataTable tr:nth-child(2n+1) {
+     background-color: #b2b2b2;
+}
+
+table.dataTable tr:nth-child(2n) {
+     background-color: #e5e5e5;
+}
+
+table.dataTable thead th, table.dataTable tfoot th {
+     background-color: #8f8f8f;
+     border: 3px solid #8f8f8f;
+     color: black;
+     font-family: Arial;
+     font-size: 18px;
+     font-weight: bolder;
+     margin-left: 3px;
+     padding: 7px;
+     text-align: left;
+     vertical-align: middle;
+}
+
+table.dataTable > tbody > tr:nth-child(n+1) > td:first-child {
+     font-weight: bolder;
+  	 font-size: 20px;
+}
