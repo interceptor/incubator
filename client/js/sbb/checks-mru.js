@@ -965,7 +965,8 @@ define(function (require) {
 			}
 			
 			// http://momentjs.com/
-			function getTimeStamp(format = checksUtil.dateFormat) {
+			function getTimeStamp(format) {
+				var format = typeof format !== 'undefined' ?  format : checksUtil.dateFormat;
 				return moment().format(format);
 			}
 			
