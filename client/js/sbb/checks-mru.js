@@ -527,8 +527,9 @@ define(function (require) {
 			
 			// http://www.w3.org/TR/html4/types.html#type-id
 			function createValidID(string) {
-				var regex = /\/|:|\./ig; // the pipes are to be able to list multiple items to replace, the "/" and the "." are escaped
-				stringValidId = string.replace(regex, "_").trim();
+				stringNoSpaces = string.replace(/\s/g, '');
+				var regex = /\/|:|\.|\(|\)|\[|\]|\@/ig; // the pipes are to be able to list multiple items to replace, the "/" and the "." are escaped
+				stringValidId = stringNoSpaces.replace(regex, "_").trim();
 				return stringValidId;
 			}
 			
@@ -550,10 +551,12 @@ define(function (require) {
 						safeLog("Web Worker returned with Status [" + event.data[0] + "]");
 						var timerDiv = document.getElementById("timer_" + createValidID(checkURL));
 						removeTableRow(clusterName, checkURL);
-						if (event.data[0] == "500") {
+						if (event.data[0] == "500") { // server error
 							addErrorRowToTable(clusterName, checkURL, "Error 50x")
-						} else if (event.data[0] == "timeout") {
+						} else if (event.data[0] == "408") { // timeout
 							addErrorRowToTable(clusterName, checkURL, "Timeout")
+						} else if (event.data[0] == "404") { // not found
+							addErrorRowToTable(clusterName, checkURL, "Not Found")
 						} else {
 							addCheckResultToTable(event.data[1], clusterName, checkURL, timerDiv.innerHTML);
 							attachCheckHistoryInfo(clusterName, checkURL);
