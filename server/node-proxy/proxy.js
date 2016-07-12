@@ -13,7 +13,7 @@ app.get('/fetchUrl', function (req, res) {
 })
 
 function callServer(target, responseToServer) {
-	console.log('Target URL: ', target);
+	console.log('==============================================================================================================');
 	var urlComponents = url.parse(target, true);
 	var options = {
 		href: urlComponents.href,
@@ -29,19 +29,23 @@ function callServer(target, responseToServer) {
 		handleHttpRequest(options, responseToServer);
 	} else if (options.protocol == 'https:') {
 		handleHttpsRequest(options, responseToServer);		
+	} else if (options.protocol == null || options.href == null || options.hostname == null || options.port == null) {
+		responseToServer.status(500).send('Server Error 500, invalid URL')
+		console.log('ERROR: cannot make call to invalid URL: [' + target + ']');
 	}
 }
 
 function handleHttpRequest(options, responseToServer) {
 	var responseData = '';
 	var request = http.request(options, (response) => {
-		console.log('statusCode: ', response.statusCode);
-		console.log('headers: ', response.headers);
+		console.log('INFO: statusCode: ' + response.statusCode + ' [' + options.href + ']');
+		// console.log('INFO: headers: ' + response.headers);
 		response.on('data', (dataChunk) => {
 			responseData += dataChunk;
+			console.log('Receiving data... [' + options.href + ']');
 		});
 		response.on('end', () => {
-			responseToServer.send(responseData);
+			responseToServer.status(response.statusCode).send(responseData);
 			console.log('Reqest to ' + options.href + ' completed');
 		});
 		});
@@ -54,18 +58,19 @@ function handleHttpRequest(options, responseToServer) {
 function handleHttpsRequest(options, responseToServer) {
 	var responseData = '';
 	var request = https.request(options, (response) => {
-		console.log('statusCode: ', response.statusCode);
-		console.log('headers: ', response.headers);
+		console.log('INFO: statusCode: ' + response.statusCode + ' [' + options.href + ']');
+		// console.log('INFO: headers: ' + response.headers);
 		response.on('data', (dataChunk) => {
 			responseData += dataChunk;
+			console.log('Receiving data... [' + options.href + ']');
 		});
 		response.on('end', () => {
-			responseToServer.send(responseData);
+			responseToServer.status(response.statusCode).send(responseData);
 			console.log('Reqest to ' + options.href + ' completed');
 		});
 		});
 		request.on('error', (ex) => {
-			console.error(ex);
+			console.error("ERROR:" + ex);
 		});
 		request.end();
 }
@@ -73,5 +78,5 @@ function handleHttpsRequest(options, responseToServer) {
 var server = app.listen(8091, function () {
 	var host = server.address().address
 	var port = server.address().port
-	console.log("mvp-build proxy listening at http://%s:%s", host, port)
+	console.log("build-status node proxy listening at http://%s:%s", host, port)
 })

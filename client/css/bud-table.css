@@ -126,14 +126,14 @@
 }
 
 .check-history  .qtip-content {
-	min-width: 350px;
+	min-width: auto;
     width:100%;
-    max-width: 350px;
+    max-width: auto;
 	text-align: left;
 	font-size: 16px;
 	font-family:Arial;
 	line-height: normal;
-	margin-right: 15px;
+	margin-right: 5px;
 }
 
 .check-history-ok {
