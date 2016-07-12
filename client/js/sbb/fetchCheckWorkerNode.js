@@ -15,10 +15,11 @@ self.addEventListener('message', function(event) {
 		xhr.addEventListener('timeout', timeoutHandler, false); // When the author specified timeout has passed before the request could complete
 		xhr.addEventListener('error', errorHandler, false); // When the request has failed
 		// configure 
-		xhr.responseType = 'text';
-		xhr.timeout = 10000; // 10 seconds
+		// xhr.responseType = 'text';
 		// open
 		xhr.open('GET', 'http://mvdtools.sbb.ch:8091/fetchUrl?target=' + encodeURIComponent(checkURL), true); // async true
+		// setting timeout after open() method because of IE11 bug
+		xhr.timeout = 10000; // 10 seconds
 		xhr.send();						
 	}, false);
 	
