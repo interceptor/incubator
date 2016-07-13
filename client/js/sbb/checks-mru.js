@@ -96,19 +96,19 @@ define(function (require) {
 				// generate and add tables for each unique cluster to the page
 				var checkservletsData = new CheckservletsGenerated();
 				var stageInfo = checkservletsData.stageInfo;
-				addControlPanel("Stage: [" + stageInfo.stage + "] Release Train: [" + stageInfo.releaseTrain + "] Release Group: [" + stageInfo.releaseGroup + "]");
+				addControlPanel("Stage: [" + stageInfo.stage + "] Release Train: [" + stageInfo.releaseTrain + "]");
 				$('#container').append("<p/>");
 				$.each(checkservletsData.checks, function(checkIndex, check) {
 					if (tables.getTable(check.clusterName) === undefined) { // check if a table for this Cluster was already added
 						var titleRowStatus = {"cluster-status": getClusterStatusOKElement(check.clusterName)};
 						var titleRowText = {"cluster-name": "[Cluster: " + check.clusterName + "]"};
 						var id = check.clusterName;
-						var titleRowControls = {"reload": getReloadElement(id), "filterOK": getFilterOKElement(id), "resetFilter": getResetFilterElement(id), "collapseAll": getCollapseElement(id)};
+						var titleRowControls = {"reload": getReloadElement(id, "Reload"), "filterOK": getFilterOKElement(id, "Filter OK"), "resetFilter": getResetFilterElement(id, "Reset Filter"), "collapseAll": getCollapseElement(id, "Collapse Table")};
 						var titleRowData = [titleRowStatus, titleRowText, titleRowControls];
-						var table = makeTable('#container', check.clusterName, titleRowData, [["Level 1 Status", "Application", "Artefact", "Artefact Version", "Node", "Port", "Build Timestamp", "Links", "Last Update"]]);
+						var table = makeTable('#container', check.clusterName, titleRowData, [["Level 1 Status", "Application", "Artefact", "Release Group", "Artefact Version", "Node", "Port", "Build Timestamp", "Links", "Last Update"]]);
 						$('#container').append("<p/>");
 						var success = tables.addTable(check.clusterName, table)
-						attachRefreshButtonListener(check.clusterName);
+						attachRefreshButtonListener(check);
 						attachFilterOKButtonListener(check.clusterName);
 						attachFilterResetButtonListener(check.clusterName);
 						attachCollapseButtonListener(check.clusterName);
@@ -119,7 +119,7 @@ define(function (require) {
 					$.each(check.urls, function(urlIndex, url) {
 						tables.addCheckURL(check.clusterName, url);
 						addLoadingRowToTable(check.clusterName, url, 0);
-						fetchCheckWorker(url, check.clusterName);
+						fetchCheckWorker(url, check);
 					});
 				});
 				//addFAKECheckResultToTableForTesting("Mike", "NOK");
@@ -167,9 +167,9 @@ define(function (require) {
 				var panel = $("<div id='control-panel', class='control-panel'/>");
 				$(panel).append("<h1 id='env-title' class='env-title'>" + environmentTitle + "</h1>");
 				$(panel).append("<span>Control Panel:</span>");
-				$(panel).append(getFilterOKElement("control-panel"));
-				$(panel).append(getResetFilterElement("control-panel"));
-				$(panel).append(getCollapseElement("control-panel"));
+				$(panel).append(getFilterOKElement("control-panel", "Filter OK"));
+				$(panel).append(getResetFilterElement("control-panel", "Reset Filter"));
+				$(panel).append(getCollapseElement("control-panel", "Collapse all tables"));
 				// $(panel).append(getSearchElement("control-panel"));
 				// $(panel).append(getSearchIcon("control-panel"));
 				$('#container').append(panel);
@@ -179,13 +179,14 @@ define(function (require) {
 				// attachSearchInputListener("control-panel");
 			}
 			
-			function reloadTable(tableName) {
-				var URLs = tables.getURLs(tableName);
+			function reloadTable(check) {
+				var tableId = check.clusterName;
+				var URLs = tables.getURLs(tableId);
 				safeLog("Refreshing: " + URLs);
-				clearTable(tableName);
+				clearTable(tableId);
 				$.each(URLs, function(index, url) {
-					addLoadingRowToTable(tableName, url, 0);
-					fetchCheckWorker(url, tableName);
+					addLoadingRowToTable(tableId, url, 0);
+					fetchCheckWorker(url, check);
 				});
 				// createLunrIndex();
 			}
@@ -265,10 +266,11 @@ define(function (require) {
 				});
 			}
 			
-			function attachRefreshButtonListener(tableName) {
+			function attachRefreshButtonListener(check) {
+				var tableName = check.clusterName;
 				var button = getElementById("reload-" + tableName);
 				button.click(function() {
-					reloadTable(tableName);
+					reloadTable(check);
 				});
 			}
 			
@@ -341,57 +343,63 @@ define(function (require) {
 			}
 			
 			// https://useiconic.com/open/
-			function getReloadElement(tableName) {
+			function getReloadElement(tableName, tooltip) {
 				var button = $("<input/>");
 				$(button).attr("id", 'reload-' + tableName);
 				$(button).addClass("icon icon-reload-table");
 				$(button).attr("type", "image");
 				$(button).attr("src", imgreload.src);
+				addTooltipInfoToElement($(button), tooltip)
 				return button;
 			}
 			
-			function getFilterOKElement(tableName) {
+			function getFilterOKElement(tableName, tooltip) {
 				var button = $("<input/>");
 				$(button).attr("id", 'filterOK-' + tableName);
 				$(button).addClass("icon icon-filter-ok");
 				$(button).attr("type", "image");
 				$(button).attr("src", imgwarning.src);
+				addTooltipInfoToElement($(button), tooltip)
 				return button;
 			}
 			
-			function getResetFilterElement(tableName) {
+			function getResetFilterElement(tableName, tooltip) {
 				var button = $("<input/>");
 				$(button).attr("id", 'filterReset-' + tableName);
 				$(button).addClass("icon icon-reset-filter");
 				$(button).attr("type", "image");
 				$(button).attr("src", imgcirclecheck.src);
+				addTooltipInfoToElement($(button), tooltip)
 				return button;
 			}
 			
-			function getCollapseElement(tableName) {
+			function getCollapseElement(tableName, tooltip) {
 				var button = $("<input/>");
 				$(button).attr("id", 'collapse-' + tableName);
 				$(button).addClass("icon icon-collapse-table");
 				$(button).attr("type", "image");
 				$(button).attr("src", imgcollapseup.src);
+				addTooltipInfoToElement($(button), tooltip)
 				return button;
 			}
 			
-			function getClusterStatusOKElement(tableName) {
+			function getClusterStatusOKElement(tableName, tooltip) {
 				var button = $("<input/>");
 				$(button).attr("id", 'clusterStatusOK-' + tableName);
 				$(button).addClass("icon icon-cluster-ok");
 				$(button).attr("type", "image");
 				$(button).attr("src", imgsun.src);
+				addTooltipInfoToElement($(button), tooltip)
 				return button;
 			}
 			
-			function getClusterStatusNOKElement(tableName) {
+			function getClusterStatusNOKElement(tableName, tooltip) {
 				var button = $("<input/>");
 				$(button).attr("id", 'clusterStatusNOK-' + tableName);
 				$(button).addClass("icon icon-cluster-nok");
 				$(button).attr("type", "image");
 				$(button).attr("src", imgrain.src);
+				addTooltipInfoToElement($(button), tooltip)
 				return button;
 			}
 			
@@ -524,26 +532,26 @@ define(function (require) {
 				$(document).ready(func);
 			}
 				
-			function fetchCheckWorker(checkURL, clusterName) {
+			function fetchCheckWorker(checkURL, check) {
 				var worker;
 				if (typeof(Worker) !== "undefined") {
 					var worker = new Worker(require.toUrl('checkworker') + '.js');
 					worker.addEventListener('message', function(event) {
 						safeLog("Web Worker returned with Status [" + event.data[0] + "]");
 						var timerDiv = document.getElementById("timer_" + createValidID(checkURL));
-						removeTableRow(clusterName, checkURL);
+						removeTableRow(check.clusterName, checkURL);
 						if (event.data[0] == "200") { // OK!
-							addCheckResultToTable(event.data[1], clusterName, checkURL, timerDiv.innerHTML);
+							addCheckResultToTable(event.data[1], check.clusterName, check.releaseTrain, checkURL, timerDiv.innerHTML);
 						} else if (event.data[0] == "500") { // server error
-							addErrorRowToTable(clusterName, checkURL, "Error 50x", timerDiv.innerHTML)
+							addErrorRowToTable(check.clusterName, checkURL, "Error 50x", timerDiv.innerHTML)
 						} else if (event.data[0] == "408") { // timeout
-							addErrorRowToTable(clusterName, checkURL, "Timeout", timerDiv.innerHTML)
+							addErrorRowToTable(check.clusterName, checkURL, "Timeout", timerDiv.innerHTML)
 						} else if (event.data[0] == "404") { // not found
-							addErrorRowToTable(clusterName, checkURL, "Not Found", timerDiv.innerHTML)
+							addErrorRowToTable(check.clusterName, checkURL, "Not Found", timerDiv.innerHTML)
 						}
 						worker.terminate();
-						updateClusterStatus(clusterName);
-						attachCheckHistoryInfo(clusterName, checkURL);
+						updateClusterStatus(check.clusterName);
+						attachCheckHistoryInfo(check.clusterName, checkURL);
 					}, false);
 					worker.onerror  = function(event) {
 						safeLog("Webworker returned error: " + event[0]);
@@ -602,8 +610,8 @@ define(function (require) {
 				addTimer(timerId, getTimeStamp());
 			}
 					
-			function addCheckResultToTable(checkHtml, tableId, checkURL, timeElapsed) {
-				var checkResultMap = {status : "n/a", applicationName : "n/a", artefactName : "n/a", artefactVersion :"n/a", node : "n/a", port : "n/a", buildTimestamp : "n/a", checkLevelOneUrl : "n/a", lastUpdateTime : "n/a"};
+			function addCheckResultToTable(checkHtml, tableId, releaseGroup, checkURL, timeElapsed) {
+				var checkResultMap = {status : "n/a", applicationName : "n/a", artefactName : "n/a", releaseGroup : "n/a", artefactVersion :"n/a", node : "n/a", port : "n/a", buildTimestamp : "n/a", checkLevelOneUrl : "n/a", lastUpdateTime : "n/a"};
 				var tempHtmlDom = $("<div/>").html(checkHtml).contents(); // trick to hold html in DOM without displaying it
 				var defaultSplunkURL = getDefaultSplunkURL(checkURL, tableId);
 				checkResultMap.checkLevelOneUrl = '<a href="' + checkURL + '"target="_blank"><img src="' + imgextlink.src + '" width="30" height="30"></a> ' + ' <a href="' + defaultSplunkURL + '"target="_blank"><img src="' + imgsplunk.src + '" width="30" height="30"></a>';
@@ -611,13 +619,14 @@ define(function (require) {
 				checkResultMap.status = statusElements != null ? "OK" : "NOK";
 				checkResultMap.applicationName = getLegacyCheckData(tempHtmlDom, "td", "Application:");
 				checkResultMap.artefactName = getLegacyCheckData(tempHtmlDom, "td", "Project:");
+				checkResultMap.releaseGroup = releaseGroup;
 				checkResultMap.artefactVersion = getVersionFromLegacy(tempHtmlDom);
 				checkResultMap.port = getPort(checkURL);
 				checkResultMap.node = getNode(checkURL);
 				checkResultMap.buildTimestamp = getBuildTimestampFromLegacy(tempHtmlDom);
 				checkResultMap.lastUpdateTime = getTimeStamp();
 				var statusClass = checkResultMap.status == "OK" ? "status status-ok" : "status status-nok";
-				var checkResultRow = [[statusClass, checkResultMap.status + " [" + timeElapsed + "]"], ["applicationName", truncate(checkResultMap.applicationName, 35)], ["artefactName", checkResultMap.artefactName], ["artefactVersion", checkResultMap.artefactVersion], ["node", checkResultMap.node], ["port", checkResultMap.port], ["buildTimestamp", checkResultMap.buildTimestamp], ["checkLevelOneUrl", checkResultMap.checkLevelOneUrl], ["lastUpdateTime", checkResultMap.lastUpdateTime]];
+				var checkResultRow = [[statusClass, checkResultMap.status + " [" + timeElapsed + "]"], ["applicationName", truncate(checkResultMap.applicationName, 35)], ["artefactName", checkResultMap.artefactName], ["releaseGroup", checkResultMap.releaseGroup], ["artefactVersion", checkResultMap.artefactVersion], ["node", checkResultMap.node], ["port", checkResultMap.port], ["buildTimestamp", checkResultMap.buildTimestamp], ["checkLevelOneUrl", checkResultMap.checkLevelOneUrl], ["lastUpdateTime", checkResultMap.lastUpdateTime]];
 				safeLog("Adding Check-Status row to Table: " + tableId);
 				addTableRow(tableId, checkURL, checkResultRow, 0);
 				checkHistoryManager(tableId, checkURL, checkResultMap.status, timeElapsed, checkResultMap.lastUpdateTime);
@@ -897,7 +906,8 @@ define(function (require) {
 				});
 			}
 				
-			function addFAKECheckResultToTableForTesting(tableId, status) {
+			function addFAKECheckResultToTableForTesting(check, status) {
+				var tableId = check.clusterName;
 				var fakeUrl = "";
 				if (status == "NOK") {
 					fakeUrl = rootPath + "/bud-proto/nok-check.html";
@@ -905,7 +915,7 @@ define(function (require) {
 					fakeUrl = rootPath + "/bud-proto/ok-check.html";
 				}
 				addLoadingRowToTable(tableId, fakeUrl, 0);
-				fetchCheckWorker(fakeUrl, tableId);
+				fetchCheckWorker(fakeUrl, check);
 			}
 			
 			function attachCheckHistoryInfo(clusterName, checkURL) {
