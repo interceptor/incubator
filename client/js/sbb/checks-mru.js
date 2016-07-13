@@ -90,32 +90,13 @@ define(function (require) {
 					}
 				}
 			});
-
-			/* function setupResourcePaths() {
-				var uri = new URI(window.location.href);
-				var queries = URI.parseQuery(uri.query());
-				testingPath = queries.testing;
-				protocol = uri.protocol();
-				host = uri.host();
-				directoryPath = uri.directory();
-				rootContext = uri.hasQuery("testing") === true ? (directoryPath + "/" + testingPath) : directoryPath;
-				rootPath = URI(protocol + "://" + host + rootContext).normalizePathname();
-				imagePath = URI(rootPath + '/images').normalizePathname();
-				safeLog("Setting protocol to ["  + protocol + "]");
-				safeLog("Setting host to ["  + host + "]");
-				safeLog("Setting directoryPath to ["  + directoryPath + "]");
-				safeLog("Setting testing path to ["  + testingPath + "]");
-				safeLog("Setting root context to ["  + rootContext + "]");
-				safeLog("Setting root path to ["  + rootPath + "]");
-				safeLog("Setting image resource path to ["  + imagePath + "]");
-			} */
 							
 			$(document).ready(function() {
-				// setupResourcePaths();
 				// createLunrIndex();
 				// generate and add tables for each unique cluster to the page
 				var checkservletsData = new CheckservletsGenerated();
-				addControlPanel("Stage: [" + checkservletsData.stageInfo.stage + "] Major Version: [" + checkservletsData.stageInfo.majorVersion + "]");
+				var stageInfo = checkservletsData.stageInfo;
+				addControlPanel("Stage: [" + stageInfo.stage + "] Release Train: [" + stageInfo.releaseTrain + "] Release Group: [" + stageInfo.releaseGroup + "]");
 				$('#container').append("<p/>");
 				$.each(checkservletsData.checks, function(checkIndex, check) {
 					if (tables.getTable(check.clusterName) === undefined) { // check if a table for this Cluster was already added
