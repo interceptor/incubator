@@ -541,7 +541,7 @@ define(function (require) {
 						var timerDiv = document.getElementById("timer_" + createValidID(checkURL));
 						removeTableRow(check.clusterName, checkURL);
 						if (event.data[0] == "200") { // OK!
-							addCheckResultToTable(event.data[1], check.clusterName, check.releaseTrain, checkURL, timerDiv.innerHTML);
+							addCheckResultToTable(event.data[1], check.clusterName, check.releaseGroup, checkURL, timerDiv.innerHTML);
 						} else if (event.data[0] == "500") { // server error
 							addErrorRowToTable(check.clusterName, checkURL, "Error 50x", timerDiv.innerHTML)
 						} else if (event.data[0] == "408") { // timeout
