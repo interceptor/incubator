@@ -156,7 +156,8 @@ define(function (require) {
 				}
 				$(clusterStatusSpan).append(statusElement);
 				var failedChecks = getNumberOfNOKCheckRows();
-				globalFavicon.badge(failedChecks);
+				var errorRows = getNumberOfErrorRows();
+				globalFavicon.badge(failedChecks + errorRows);
 			}
 			
 			function newFavico(id) {
@@ -214,6 +215,10 @@ define(function (require) {
 			
 			function getNumberOfNOKCheckRows() {
 				return $(".status-nok").length;
+			}
+			
+			function getNumberOfErrorRows() {
+				return $(".status-error").length;
 			}
 			
 			function filterOKAllTables() {
@@ -799,7 +804,7 @@ define(function (require) {
 					var checkHistoryArrays = $.makeArray(store.get(historyId));
 					var latestEntry = getLatestHistoryEntry(checkHistoryArrays);
 					if (latestEntry.length > 0) {
-						if (latestEntry[1] != "OK") {
+						if (latestEntry[1].checkStatus != "OK") {
 							clusterStatus = "NOK";
 						}
 					} else {
