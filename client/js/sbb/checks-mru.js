@@ -619,24 +619,40 @@ define(function (require) {
 				var checkResultMap = {status : "n/a", applicationName : "n/a", artefactName : "n/a", releaseGroup : "n/a", artefactVersion :"n/a", node : "n/a", port : "n/a", buildTimestamp : "n/a", checkLevelOneUrl : "n/a", lastUpdateTime : "n/a"};
 				var tempHtmlDom = $("<div/>").html(checkHtml).contents(); // trick to hold html in DOM without displaying it
 				var defaultSplunkURL = getDefaultSplunkURL(checkURL, tableId);
-				checkResultMap.checkLevelOneUrl = '<a href="' + checkURL + '"target="_blank"><img src="' + imgextlink.src + '" width="30" height="30"></a> ' + ' <a href="' + defaultSplunkURL + '"target="_blank"><img src="' + imgsplunk.src + '" width="30" height="30"></a>';
 				var statusElements = getElementsByTextContent(tempHtmlDom, "div", "sbb access")[0];
 				checkResultMap.status = statusElements != null ? "OK" : "NOK";
-				checkResultMap.applicationName = getLegacyCheckData(tempHtmlDom, "td", "Application:");
-				checkResultMap.artefactName = getLegacyCheckData(tempHtmlDom, "td", "Project:");
-				checkResultMap.releaseGroup = releaseGroup;
-				checkResultMap.artefactVersion = getVersionFromLegacy(tempHtmlDom);
+				var statusClass = checkResultMap.status == "OK" ? "status status-ok" : "status status-nok";
+				checkResultMap.checkLevelOneUrl = '<a href="' + checkURL + '"target="_blank"><img src="' + imgextlink.src + '" width="30" height="30"></a> ' + ' <a href="' + defaultSplunkURL + '"target="_blank"><img src="' + imgsplunk.src + '" width="30" height="30"></a>';
 				checkResultMap.port = getPort(checkURL);
 				checkResultMap.node = getNode(checkURL);
-				checkResultMap.buildTimestamp = getBuildTimestampFromLegacy(tempHtmlDom);
 				checkResultMap.lastUpdateTime = getTimeStamp();
-				var statusClass = checkResultMap.status == "OK" ? "status status-ok" : "status status-nok";
+				checkResultMap.releaseGroup = releaseGroup;
+				if (isEstaCheck(tempHtmlDom)) {
+					checkResultMap.applicationName = getElementsByTagName(tempHtmlDom, "#estaAppNameId")[0].textContent;
+					checkResultMap.artefactName = getElementsByTagName(tempHtmlDom, "#moduleId")[0].textContent;
+					checkResultMap.artefactVersion = getElementsByTagName(tempHtmlDom, "#versionId")[0].textContent;
+					checkResultMap.buildTimestamp = getElementsByTagName(tempHtmlDom, "#buildTimeId")[0].textContent;
+				} else {
+					checkResultMap.applicationName = getLegacyCheckData(tempHtmlDom, "td", "Application:");
+					checkResultMap.artefactName = getLegacyCheckData(tempHtmlDom, "td", "Project:");
+					checkResultMap.artefactVersion = getVersionFromLegacy(tempHtmlDom);
+					checkResultMap.buildTimestamp = getBuildTimestampFromLegacy(tempHtmlDom);
+				}
 				var checkResultRow = [[statusClass, checkResultMap.status + " [" + timeElapsed + "]"], ["applicationName", truncate(checkResultMap.applicationName, 35)], ["artefactName", checkResultMap.artefactName], ["releaseGroup", checkResultMap.releaseGroup], ["artefactVersion", checkResultMap.artefactVersion], ["node", checkResultMap.node], ["port", checkResultMap.port], ["buildTimestamp", checkResultMap.buildTimestamp], ["checkLevelOneUrl", checkResultMap.checkLevelOneUrl], ["lastUpdateTime", checkResultMap.lastUpdateTime]];
 				safeLog("Adding Check-Status row to Table: " + tableId);
 				addTableRow(tableId, checkURL, checkResultRow, 0);
 				checkHistoryManager(tableId, checkURL, checkResultMap.status, timeElapsed, checkResultMap.lastUpdateTime);
 				// lunrIndex.add({"id": createValidID(tableId+checkURL), "artefactName": checkResultMap.artefactName, "artefactVersion": checkResultMap.artefactVersion, "node": checkResultMap.node, "port": checkResultMap.port, "applicationName": checkResultMap.applicationName, "status": checkResultMap.status});
 				lastUpdateTimer(tableId + checkURL, tableId + "-lastUpdateTime");
+			}
+			
+			function isEstaCheck(checkHtml) {
+				var isEstaCheck = false;
+				var estsVersion = getLegacyCheckData(checkHtml, "td", "ESTA-Version:");
+				if (estsVersion != "n/a") {
+					isEstaCheck = true;
+				}
+				return isEstaCheck
 			}
 			
 			function getLegacyCheckData(html, tagName, searchString) {
@@ -689,6 +705,8 @@ define(function (require) {
 				var truncatedString = "";
 				if (string != null && string.length > maxLength + 3) {
 					truncatedString = string.substring(0, maxLength) + "...";
+				} else {
+					truncatedString = string;
 				}
 				return truncatedString;
 			}
@@ -885,7 +903,7 @@ define(function (require) {
 				var elements = getElementsByTagName(domFragment, tagName);
 				safeLog("Searching for Element(s) with Tagname [ " + tagName + "]: containing text [" + searchText + "]");
 				$(elements).each(function() {
-					if ($(this).text() === searchText) {
+					if ($(this).text().trim() === searchText.trim()) {
 						foundElements.push($(this));
 						safeLog("Found Element [" + tagName + "] with Text Match for Search String [" + searchText + "]: " + $(this).text());
 					}
