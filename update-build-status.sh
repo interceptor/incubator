@@ -5,7 +5,8 @@ set -e
 #set -x
 
 # import log helper and set log file
-source ./shell-log-helper.sh /home/ue62793/update-build-status.log
+export PATH=/home/$USER/build-status:$PATH
+source shell-log-helper.sh /home/$USER/update-build-status.log
 
 SCRIPTENTRY
 
@@ -71,9 +72,9 @@ function envSetupLive() {
 	ENTRY
 	INFO "setup env. variables [LIVE]"
 	envSetupGeneric
-	tempDir=/home/ue62793/temp
-	bakDir=/home/ue62793/backup
-	installDir=/home/ue62793/build-status
+	tempDir=/home/$USER/temp
+	bakDir=/home/$USER/backup
+	installDir=/home/$USER/build-status
 	liveHostDir=/var/www/html/build-status
 	RETURN OK
 }
@@ -82,9 +83,9 @@ function envSetupBeta() {
 	ENTRY
 	INFO "setup env. variables [BETA]"
 	envSetupGeneric
-	tempDir=/home/ue62793/temp
-	bakDir=/home/ue62793/backup/beta
-	installDir=/home/ue62793/build-status-beta
+	tempDir=/home/$USER/temp
+	bakDir=/home/$USER/backup/beta
+	installDir=/home/$USER/build-status-beta
 	liveHostDir=/var/www/html/build-status/beta
 	RETURN OK
 }
