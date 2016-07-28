@@ -186,8 +186,8 @@ function startService() {
 	# check if our service is still running
 	INFO "Check our service process: $(ps aux | grep proxy.js)"
 	# run two background procs that monitor logs
-	tail -f build-status-proxy.log &
-	tail -f build-status-proxy.err &
+	##tail -f build-status-proxy.log &
+	##tail -f build-status-proxy.err &
 	RETURN OK 
 }
 
