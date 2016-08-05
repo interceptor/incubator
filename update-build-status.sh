@@ -160,7 +160,7 @@ function stopService() {
 	INFO "STOP build-status service"
 	procFound=$(ps aux | grep [p]roxy.js | wc --lines)
 	# only run kill if we find no more than 3 processes
-	if [ "$procFound" -le "3" ]
+	if [ "$procFound" -le "3" -a "$procFound" -gt "0"]
 	then
 		pids=$(ps aux | grep [p]roxy.js | awk '{print $2}')
 		INFO "Killing Pids: [$pids]"
