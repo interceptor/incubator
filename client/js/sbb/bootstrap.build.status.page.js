@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: '/build-status-beta',
+    baseUrl: '/build-status',
 	waitSeconds : 20,
 	paths: {
         jquery: [/*'https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js',*/ 'client/js/lib/jquery-2.1.4.min'],
