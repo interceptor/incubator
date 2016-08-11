@@ -18,24 +18,34 @@ function update() {
 		envSetupLive
 		printEnvSetup
 		stopService
+		cleanup
+		backup
+		uninstall
+		download
+		install
 	elif [ "$1" == "beta" ]
 	then
-		envSetupBeta
+		envSetupBeta $2
 		printEnvSetup
 		stopService
+		cleanup
+		backup
+		uninstall
+		downloadBeta
+		install
 	elif [ "$1" == "local" ]
 	then 
 		envSetupLocal
 		printEnvSetup
+		cleanup
+		backup
+		uninstall
+		download
+		install
 	else 
 		ERROR "Must specify 'local', 'beta' or 'live'"
 		exit 1
 	fi
-	cleanup
-	backup
-	uninstall
-	download
-	install
 	if [ "$1" != "local" ]
 	then 
 		activate
@@ -73,7 +83,7 @@ function envSetupLive() {
 	INFO "setup env. variables [LIVE]"
 	envSetupGeneric
 	tempDir=/home/$USER/temp
-	bakDir=/home/$USER/backup
+	bakDir=/home/$USER/backup/build-status
 	installDir=/home/$USER/build-status
 	liveHostDir=/var/www/html/build-status
 	RETURN OK
@@ -84,9 +94,10 @@ function envSetupBeta() {
 	INFO "setup env. variables [BETA]"
 	envSetupGeneric
 	tempDir=/home/$USER/temp
-	bakDir=/home/$USER/backup/beta
+	bakDir=/home/$USER/backup/build-status/beta
 	installDir=/home/$USER/build-status-beta
-	liveHostDir=/var/www/html/build-status/beta
+	liveHostDir=/var/www/html/build-status-beta
+	betaBranch=$1
 	RETURN OK
 }
 
@@ -134,6 +145,14 @@ function download() {
 	RETURN OK
 }
 
+function downloadBeta() {
+	ENTRY
+	INFO "get latest beta version [$betaBranch] of build-status code from git repo"
+	download
+	git checkout --force $betaBranch
+	RETURN OK
+}
+
 function install() {
 	ENTRY
 	INFO "download and install latest build-status pages and data"
@@ -148,7 +167,7 @@ function install() {
 
 function activate() {
 	ENTRY
-	INFO "activating LIVE build-status in apache httpd host dir"
+	INFO "activating [$installDir] in apache httpd host dir [$liveHostDir]"
 	sudo mkdir --parents $liveHostDir
 	# create directory symbolic link
 	sudo ln -s $installDir/* $liveHostDir
@@ -192,6 +211,6 @@ function startService() {
 }
 
 # run it
-update $1
+update $1 $2
 
 SCRIPTEXIT
