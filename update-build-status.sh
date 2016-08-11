@@ -18,24 +18,34 @@ function update() {
 		envSetupLive
 		printEnvSetup
 		stopService
+		cleanup
+		backup
+		uninstall
+		download
+		install
 	elif [ "$1" == "beta" ]
 	then
-		envSetupBeta
+		envSetupBeta $2
 		printEnvSetup
 		stopService
+		cleanup
+		backup
+		uninstall
+		downloadBeta
+		install
 	elif [ "$1" == "local" ]
 	then 
 		envSetupLocal
 		printEnvSetup
+		cleanup
+		backup
+		uninstall
+		download
+		install
 	else 
 		ERROR "Must specify 'local', 'beta' or 'live'"
 		exit 1
 	fi
-	cleanup
-	backup
-	uninstall
-	download
-	install
 	if [ "$1" != "local" ]
 	then 
 		activate
@@ -87,6 +97,7 @@ function envSetupBeta() {
 	bakDir=/home/$USER/backup/beta
 	installDir=/home/$USER/build-status-beta
 	liveHostDir=/var/www/html/build-status/beta
+	betaBranch=$1
 	RETURN OK
 }
 
@@ -131,6 +142,14 @@ function download() {
 	ENTRY
 	INFO "get latest version of build-status code from git repo"
 	mkdir --parents $installDir && cd $installDir && git clone $buildStatusURL $installDir
+	RETURN OK
+}
+
+function downloadBeta() {
+	ENTRY
+	INFO "get latest beta version [$betaBranch] of build-status code from git repo"
+	download
+	git checkout --force $betaBranch
 	RETURN OK
 }
 
