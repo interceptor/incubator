@@ -12,45 +12,61 @@ SCRIPTENTRY
 
 function update() {
 	ENTRY
-	INFO "Updating build-status [$1]"
-	if [ "$1" == "live" ]
+	INFO "Updating build-status [@1]"
+	if [[ "$1" == "live" ]] && [[ "$2" != "restore" ]]
 	then 
 		envSetupLive
 		printEnvSetup
 		stopService
 		cleanup
-		backup
+		backup $2
 		uninstall
 		download
 		install
-	elif [ "$1" == "beta" ]
+	elif [[ "$1" == "beta" ]] && [[ "$2" != "restore" ]]
 	then
 		envSetupBeta $2
 		printEnvSetup
 		stopService
 		cleanup
-		backup
+		backup $2
 		uninstall
 		downloadBeta
 		install
-	elif [ "$1" == "local" ]
+	elif [[ "$1" == "local" ]]
 	then 
 		envSetupLocal
 		printEnvSetup
 		cleanup
-		backup
+		backup $2
 		uninstall
 		download
 		install
+	elif [[ "$1" == "live" ]] && [[ "$2" == "restore" ]]
+	then 
+		envSetupLive
+		printEnvSetup
+		stopService
+		cleanup
+		uninstall
+		restore
+	elif [[ "$1" == "beta" ]] && [[ "$2" == "restore" ]]
+	then 
+		envSetupBeta "fromBackup"
+		printEnvSetup
+		stopService
+		cleanup
+		uninstall
+		restore
 	else 
 		ERROR "Must specify 'local', 'beta' or 'live'"
 		exit 1
 	fi
-	if [ "$1" != "local" ]
+	if [[ "$1" != "local" ]]
 	then 
 		activate
 		startService
-	elif [ "$1" == "local" ]
+	elif [[ "$1" == "local" ]]
 	then 
 		INFO "Not activating for LOCAL TEST!"
 	fi
@@ -62,7 +78,6 @@ function envSetupGeneric() {
 	INFO "setup env. variables [GENERIC]"
 	pagesURL=https://ci.sbb.ch/job/mvp.shared.smoothie.generate-build-status-pages.custom.develop/lastSuccessfulBuild/artifact/*zip*/pages.zip
 	indexURL=https://ci.sbb.ch/job/mvp.shared.smoothie.generate-build-status-index.custom.develop/lastSuccessfulBuild/artifact/*zip*/index.zip
-	buildStatusURLSSH=ssh://git@code.sbb.ch:7999/mvp_shared/build-status.git
 	buildStatusURL=https://code.sbb.ch/scm/mvp_shared/build-status.git
 	RETURN OK
 }
@@ -94,7 +109,7 @@ function envSetupBeta() {
 	INFO "setup env. variables [BETA]"
 	envSetupGeneric
 	tempDir=/home/$USER/temp
-	bakDir=/home/$USER/backup/build-status/beta
+	bakDir=/home/$USER/backup/build-status-beta
 	installDir=/home/$USER/build-status-beta
 	liveHostDir=/var/www/html/build-status-beta
 	betaBranch=$1
@@ -125,8 +140,25 @@ function cleanup() {
 
 function backup() {
 	ENTRY
-	INFO "make backup of current build-status"
-	sudo cp -a --force $installDir $bakDir
+	if [ "$1" == "nobackup" ]
+	then
+		INFO "no backup is created - probably ran by cron job!"
+	else
+		timestamp=`date '+%d-%m-%Y_%H-%M-%S'`
+		INFO "creating backup of current build-status [$installDir] --> [$bakDir/$timestamp]"
+		mkdir --parents $bakDir/"$timestamp"
+		mkdir --parents $bakDir/latest
+		sudo cp -a --force $installDir $bakDir/"$timestamp"
+		sudo cp -a --force $installDir $bakDir/latest
+	fi
+	RETURN OK
+}
+
+function restore() {
+	ENTRY
+	INFO "restoring LATEST backup of build-status from [$bakDir/latest]"
+	mkdir --parents $installDir
+	sudo cp -a --force $bakDir/latest/**/* $installDir
 	RETURN OK
 }
 
@@ -179,7 +211,7 @@ function stopService() {
 	INFO "STOP build-status service"
 	procFound=$(ps aux | grep [p]roxy.js | wc --lines)
 	# only run kill if we find no more than 3 processes
-	if [ "$procFound" -le "3" -a "$procFound" -gt "0"]
+	if [[ "$procFound" -le "3" ]] && [[ "$procFound" -gt "0" ]]
 	then
 		pids=$(ps aux | grep [p]roxy.js | awk '{print $2}')
 		INFO "Killing Pids: [$pids]"
@@ -195,19 +227,13 @@ function startService() {
 	INFO "START build-status service"
 	# running with root privileges and environment, because user account did not allow intallation of required nodejs packages...
 	# run the nodeJS service script with appropriate log and error redirects
+	# the -i (simulate initial login) option runs the shell specified by the password database entry of the target user as a login shell
 	sudo -i node $liveHostDir/server/node-proxy/proxy.js > $installDir/build-status-proxy.log 2> $installDir/build-status-proxy.err &
 	# check if this 'job' is running in the background
 	INFO "running background jobs: $(jobs -l)"
-	INFO "$(jobs -l)"
-	# detach process from this shell so it survives future SIGHUP ("signal hang up")
-	pids=$(ps aux | grep [p]roxy.js | awk '{print $2}')
-	disown -h $pids
 	# check if our service is still running
 	INFO "Check our service process: $(ps aux | grep proxy.js)"
-	# run two background procs that monitor logs
-	##tail -f build-status-proxy.log &
-	##tail -f build-status-proxy.err &
-	RETURN OK 
+	RETURN OK
 }
 
 # run it
