@@ -6,7 +6,7 @@ set -e
 
 # import log helper and set log file
 export PATH=/home/$USER/build-status:$PATH
-source shell-log-helper.sh /home/$USER/update-build-status.log
+source ./shell-log-helper.sh /home/$USER/update-build-status.log
 
 SCRIPTENTRY
 
