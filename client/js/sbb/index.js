@@ -18,7 +18,6 @@ define(function (require) {
 					{"title": "Mega/Stage", "data": "mega"},
 					{"title": "Snapshot", "data": "snapshot"},
 					{"title": "Stabil", "data": "stabil"},
-					{"title": "Edut", "data": "edut"},
 					{"title": "Test", "data": "test"},
 					{"title": "Integration", "data": "integration"},
 					{"title": "Schulung", "data": "schulung"},
