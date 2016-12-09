@@ -75,9 +75,9 @@ function update() {
 
 function envSetupGeneric() {
 	ENTRY
-	INFO "setup env. variables [GENERIC]"
-	pagesURL=https://ci.sbb.ch/job/mvp.shared.smoothie.generate-build-status-pages.custom.develop/lastSuccessfulBuild/artifact/*zip*/pages.zip
-	indexURL=https://ci.sbb.ch/job/mvp.shared.smoothie.generate-build-status-index.custom.develop/lastSuccessfulBuild/artifact/*zip*/index.zip
+	INFO "setup env. variables [GENERIC]"`´
+	pagesURL=https://ci.sbb.ch/job/mvp.shared.smoothie.generate-checkstatus-pages.develop/lastSuccessfulBuild/artifact/*zip*/pages.zip
+	indexURL=https://ci.sbb.ch/job/mvp.shared.smoothie.generate-checkstatus-index.develop/lastSuccessfulBuild/artifact/*zip*/index.zip
 	buildStatusURL=https://code.sbb.ch/scm/mvp_shared/build-status.git
 	RETURN OK
 }
